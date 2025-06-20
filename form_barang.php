@@ -213,6 +213,14 @@ $data = $conn->query("SELECT * FROM stok");
             text-align: center;
             margin: 20px 0;
         }
+
+        #displayData {
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        
     </style>
 
     <?php if (in_array($action, ['insert', 'edit', 'delete'])): ?>
@@ -238,7 +246,7 @@ $data = $conn->query("SELECT * FROM stok");
         <a href="?action=insert" class="nav-btn btn-insert">Insert</a>
         <a href="?action=edit" class="nav-btn btn-edit">Edit</a>
         <a href="?action=delete" class="nav-btn btn-delete">Delete</a>
-        <a href="?action=display" class="nav-btn btn-display">Display</a>
+        <a href="#" class="nav-btn btn-display" onclick="toggleDisplay(); return false;">Display</a>
         <a href="login.php" class="nav-btn btn-exit" onclick="window.close()">Exit</a>
     </div>
 
@@ -273,7 +281,8 @@ $data = $conn->query("SELECT * FROM stok");
                 <div class="form-buttons">
                     <button type="submit" name="save" class="form-btn">Save</button>
                     <button type="reset" class="form-btn">Reset</button>
-                    <button type="submit" name="cancel" class="form-btn" formnovalidate>Cancel</button>                </div>
+                    <a href="?action=none" class="form-btn">Cancel</a>
+                </div>
             </form>
         </div>
     <?php endif; ?>
@@ -302,7 +311,7 @@ $data = $conn->query("SELECT * FROM stok");
                     <div class="form-buttons">
                         <button type="submit" name="save" class="form-btn">Save</button>
                         <button type="reset" class="form-btn">Reset</button>
-                        <button type="submit" name="cancel" class="form-btn">Cancel</button>                    
+                        <a href="?action=none" class="form-btn">Cancel</a>
                     </div>
                 </form>
             </div>
@@ -337,7 +346,8 @@ $data = $conn->query("SELECT * FROM stok");
                     <div class="form-buttons">
                         <button type="submit" name="save" class="form-btn">Save</button>
                         <button type="reset" class="form-btn">Reset</button>
-                        <button type="submit" name="cancel" class="form-btn" formnovalidate>Cancel</button>                    </div>
+                        <a href="?action=none" class="form-btn">Cancel</a>
+                    </div>
                 </form>
             </div>
         <?php else: ?>
@@ -349,33 +359,61 @@ $data = $conn->query("SELECT * FROM stok");
 </div>
 
 <div class="container">
-    <table class="data-table">
-        <tr>
-            <th>Kode Barang</th>
-            <th>Nama Barang</th>
-            <th>Satuan</th>
-            <th>Jumlah Stok</th>
-            <th>Action</th>
-        </tr>
-        <?php if ($data->num_rows > 0): ?>
-            <?php while($row = $data->fetch_assoc()): ?>
+    <div id="displayData" style="display: none; margin-top: 20px;">
+        <table class="data-table">
             <tr>
-                <td><?= htmlspecialchars($row['Kode_brg']) ?></td>
-                <td><?= htmlspecialchars($row['Nama_brg']) ?></td>
-                <td><?= htmlspecialchars($row['Satuan']) ?></td>
-                <td><?= htmlspecialchars($row['Jml_stok']) ?></td>
-                <td>
-                    <a href="?action=edit&kode=<?= urlencode($row['Kode_brg']) ?>">Edit</a> |
-                    <a href="?action=delete&kode=<?= urlencode($row['Kode_brg']) ?>">Delete</a>
-                </td>
+                <th>Kode Barang</th>
+                <th>Nama Barang</th>
+                <th>Satuan</th>
+                <th>Jumlah Stok</th>
+                <th>Action</th>
             </tr>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <tr>
-                <td colspan="5" style="text-align: center;">Tidak ada data</td>
-            </tr>
-        <?php endif; ?>
-    </table>
+            <?php if ($data->num_rows > 0): ?>
+                <?php while($row = $data->fetch_assoc()): ?>
+                <tr>
+                    <td><?= htmlspecialchars($row['Kode_brg']) ?></td>
+                    <td><?= htmlspecialchars($row['Nama_brg']) ?></td>
+                    <td><?= htmlspecialchars($row['Satuan']) ?></td>
+                    <td><?= htmlspecialchars($row['Jml_stok']) ?></td>
+                    <td>
+                        <a href="?action=edit&kode=<?= urlencode($row['Kode_brg']) ?>">Edit</a> |
+                        <a href="?action=delete&kode=<?= urlencode($row['Kode_brg']) ?>">Delete</a>
+                    </td>
+                </tr>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="5" style="text-align: center;">Tidak ada data</td>
+                </tr>
+            <?php endif; ?>
+            
+        </table>
+    </div>
 </div>
+
+    <!-- Script untuk menampilkan display -->
+<script>
+function toggleDisplay() {
+    const displayDiv = document.getElementById('displayData');
+    if (displayDiv.style.display === 'none' || displayDiv.style.display === '') {
+        displayDiv.style.display = 'block';
+    } else {
+        displayDiv.style.display = 'none';
+    }
+}
+
+const resetBtn = document.querySelector('form button[type="reset"]');
+  resetBtn.addEventListener('click', function(e) {
+    e.preventDefault(); // cegah reset bawaan
+    const form = this.closest('form');
+    form.querySelectorAll('input').forEach(input => {
+      if (input.readOnly !== true) {
+        input.value = '';
+      }
+    });
+  });
+</script>
+
+
 </body>
 </html>
