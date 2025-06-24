@@ -72,6 +72,12 @@ if (isset($_POST['cancel']) && in_array($action, ['insert', 'edit', 'delete'])) 
     $action = 'display';
 }
 
+// Handle Cancel (GET method)
+if ($action == 'cancel') {
+    lepas_lock($conn, $nama_tabel, $user);
+    $action = 'display';
+}
+
 
 
 // Get data for edit
@@ -227,7 +233,7 @@ $data = $conn->query("SELECT * FROM stok");
     <script>
         setTimeout(function() {
             window.location.href = "form_barang.php?action=timeout";
-        }, 25000); // 25 detik
+        }, 35000); // 35 detik
     </script>
     <?php endif; ?>
 
@@ -281,7 +287,7 @@ $data = $conn->query("SELECT * FROM stok");
                 <div class="form-buttons">
                     <button type="submit" name="save" class="form-btn">Save</button>
                     <button type="reset" class="form-btn">Reset</button>
-                    <a href="?action=none" class="form-btn">Cancel</a>
+                    <a href="?action=cancel" class="form-btn">Cancel</a>
                 </div>
             </form>
         </div>
@@ -311,7 +317,7 @@ $data = $conn->query("SELECT * FROM stok");
                     <div class="form-buttons">
                         <button type="submit" name="save" class="form-btn">Save</button>
                         <button type="reset" class="form-btn">Reset</button>
-                        <a href="?action=none" class="form-btn">Cancel</a>
+                        <a href="?action=cancel" class="form-btn">Cancel</a>
                     </div>
                 </form>
             </div>
@@ -346,7 +352,7 @@ $data = $conn->query("SELECT * FROM stok");
                     <div class="form-buttons">
                         <button type="submit" name="save" class="form-btn">Save</button>
                         <button type="reset" class="form-btn">Reset</button>
-                        <a href="?action=none" class="form-btn">Cancel</a>
+                        <a href="?action=cancel" class="form-btn">Cancel</a>
                     </div>
                 </form>
             </div>

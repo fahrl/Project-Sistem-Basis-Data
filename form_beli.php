@@ -25,7 +25,7 @@ if (in_array($action, ['insert', 'edit', 'delete'])) {
     if (!ambil_lock($conn, $nama_tabel, $user)) {
         $_SESSION['lock_error'] = "Record is edited by another user";
         echo "Redirecting..."; // debug
-        header("Location: form_barang.php?action=display");
+        header("Location: form_beli.php?action=display");
         exit;
     }
 }
@@ -68,6 +68,12 @@ if (isset($_POST['save']) && $action == 'delete') {
 
 // Handle Cancel
 if (isset($_POST['cancel']) && in_array($action, ['insert', 'edit', 'delete'])) {
+    lepas_lock($conn, $nama_tabel, $user);
+    $action = 'display';
+}
+
+// Handle Cancel (GET method)
+if ($action == 'cancel') {
     lepas_lock($conn, $nama_tabel, $user);
     $action = 'display';
 }
@@ -217,8 +223,8 @@ $data = $conn->query("SELECT * FROM t_beli");
     <?php if (in_array($action, ['insert', 'edit', 'delete'])): ?>
     <script>
         setTimeout(function() {
-            window.location.href = "form_barang.php?action=timeout";
-        }, 25000); // 25 detik
+            window.location.href = "form_beli.php?action=timeout";
+        }, 35000); // 35 detik
     </script>
     <?php endif; ?>
 
@@ -272,7 +278,7 @@ $data = $conn->query("SELECT * FROM t_beli");
                 <div class="form-buttons">
                     <button type="submit" name="save" class="form-btn">Save</button>
                     <button type="reset" class="form-btn">Reset</button>
-                    <a href="?action=none" class="form-btn">Cancel</a>
+                    <a href="?action=cancel" class="form-btn">Cancel</a>
                 </div>
             </form>
         </div>
@@ -302,7 +308,7 @@ $data = $conn->query("SELECT * FROM t_beli");
                     <div class="form-buttons">
                         <button type="submit" name="save" class="form-btn">Save</button>
                         <button type="reset" class="form-btn">Reset</button>
-                        <a href="?action=none" class="form-btn">Cancel</a>
+                        <a href="?action=cancel" class="form-btn">Cancel</a>
                     </div>
                 </form>
             </div>
@@ -336,7 +342,7 @@ $data = $conn->query("SELECT * FROM t_beli");
                     <div class="form-buttons">
                         <button type="submit" name="save" class="form-btn">Save</button>
                         <button type="reset" class="form-btn">Reset</button>
-                        <a href="?action=none" class="form-btn">Cancel</a>
+                        <a href="?action=cancel" class="form-btn">Cancel</a>
                     </div>
                 </form>
             </div>
